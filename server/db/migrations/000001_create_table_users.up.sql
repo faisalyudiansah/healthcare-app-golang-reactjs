@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 create table clusters(
     id bigserial primary key,
     province varchar(255) not null,

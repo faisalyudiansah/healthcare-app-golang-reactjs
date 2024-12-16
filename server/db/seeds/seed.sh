@@ -4,9 +4,9 @@ USER="postgres"
 PASSWORD="postgres"
 HOST="localhost"
 PORT=5432
-DB="api_db"
+DB="healthcare_db"
 
-TABLES=( 'users' 'user_details' 'user_addresses' 'pharmacy_partners' 'pharmacies' 'logistics' 'pharmacy_logistics' 'category_products' 'manufactures' 'product_classifications' 'product_forms' 'products' 'product_categories' 'pharmacy_products' 'orders' 'order_products' 'user_cart_items')
+TABLES=( 'users' 'user_details' 'user_addresses' 'pharmacy_partners' 'pharmacies' 'logistics' 'pharmacy_logistics' 'category_products' 'manufactures' 'product_classifications' 'product_forms' 'products' 'product_categories' 'pharmacy_products' 'orders' 'order_products' 'user_cart_items' 'clusters')
 N_TABLE=${#TABLES[@]}
 
 pg_copy_csv_to_table(){
