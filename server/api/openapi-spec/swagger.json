@@ -1,0 +1,1804 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Documentation",
+    "description": "Final Group Project Sea Labs Bootcamp",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1",
+      "description": "Development server (local)"
+    },
+    {
+      "url": "https://www.example.com/api/v1",
+      "description": "Production server "
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "description": "Login with registered account",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginOrRegister"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "email": "example@gmail.com",
+                    "password": "Example123@"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Success Login": {
+                    "value": {
+                      "message": "success",
+                      "data": {
+                        "access_token": "token"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "account is not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Unverified": {
+                    "value": {
+                      "message": "your account is not verified"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Register new account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginOrRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success create new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        },
+                        "is_verified": {
+                          "type": "boolean"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/send-verification": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Send email verification link",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success send email verification link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "generate new token in less than 1 minute",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "a token was recently generated, please wait before requesting a new one"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Verify registered account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "verification_token": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success verify account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "token already expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "the token has expired, please request a new one"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Send reset password link",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success send reset password link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "generate new token in less than 1 minute",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "a token was recently generated, please wait before requesting a new one"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Reset forgotten password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reset_token": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success reset password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "token already expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "message": "the token has expired, please request a new one"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {},
+    "/users/me/addresses": {
+      "get": {
+        "tags": ["Address"],
+        "description": "Get all user addresses",
+        "responses": {
+          "200": {
+            "description": "success get all user addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Address"],
+        "description": "Create new address",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success create new address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Address"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/addresses/{addressId}": {
+      "parameters": [
+        {
+          "name": "addressId",
+          "required": true,
+          "in": "path",
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "put": {
+        "tags": ["Address"],
+        "description": "Update existing address",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update existing address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Address"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Address"],
+        "description": "Delete existing address",
+        "responses": {
+          "200": {
+            "description": "success delete existing address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Address"],
+        "description": "Activate address as primary",
+        "responses": {
+          "200": {
+            "description": "success activate address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/cart": {},
+    "/users/me/cart/{cartItemId}": {},
+    "/products": {
+      "get": {
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": ["Product"],
+        "description": "Get all products",
+        "responses": {
+          "200": {
+            "description": "success get all products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "paging": {
+                      "$ref": "#/components/schemas/PageMetaData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/classifications": {
+      "get": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get all product classifications",
+        "responses": {
+          "200": {
+            "description": "success get all product classifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductClassification"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/manufactures": {
+      "get": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "description": "Get all manufactures",
+        "responses": {
+          "200": {
+            "description": "success get all manufactures",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Manufacture"
+                      }
+                    },
+                    "paging": {
+                      "$ref": "#/components/schemas/PageMetaData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/forms": {
+      "get": {
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get all product forms",
+        "responses": {
+          "200": {
+            "description": "success get all product forms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductForm"
+                      }
+                    },
+                    "paging": {
+                      "$ref": "#/components/schemas/PageMetaData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/categories": {
+      "get": {
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get all product categories",
+        "responses": {
+          "200": {
+            "description": "success get all product categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductClassification"
+                      }
+                    },
+                    "paging": {
+                      "$ref": "#/components/schemas/PageMetaData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/categories/{categoryId}": {},
+    "/logistics": {
+      "get": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get all logistics",
+        "responses": {
+          "200": {
+            "description": "success get all logistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Logistic"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/checkout/address": {},
+    "/checkout/shipping": {},
+    "/orders": {},
+    "/orders/{orderId}/upload-payment": {},
+    "/orders/{orderId}/confirm-delivery": {},
+    "/admin/pharmacists": {},
+    "/admin/pharmacists/{pharmacistId}": {},
+    "/admin/partners": {
+      "get": {
+        "security": [{ "jwtAuth": [] }],
+        "tags": ["Partners"],
+        "description": "Get all partners",
+        "responses": {
+          "200": {
+            "description": "success get all partners",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Partner"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [{ "jwtAuth": [] }],
+        "tags": ["Partners"],
+        "description": "Create new partners",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdatePartner"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success create new partner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Partner"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/partners/{partnerId}": {
+      "parameters": [
+        {
+          "name": "partnerId",
+          "required": true,
+          "in": "path",
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "put": {
+        "security": [{ "jwtAuth": [] }],
+        "tags": ["Partners"],
+        "description": "Create new partners",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdatePartner"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update existing partner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Partner"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "partner name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "jwtAuth": [] }],
+        "tags": ["Partners"],
+        "description": "delete existing partner",
+        "responses": {
+          "200": {
+            "description": "success delete existing partner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/pharmacies": {
+      "get": {
+        "parameters": [
+          {
+            "name": "product-id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "is-active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": ["Pharmacy"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Search existing pharmacy",
+        "responses": {
+          "200": {
+            "description": "success search pharmacy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pharmacy"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Pharmacy"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Create new pharmacy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdatePharmacy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success create new pharmacy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Pharmacy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/pharmacies/{pharmacyId}": {
+      "parameters": [
+        {
+          "name": "pharmacyId",
+          "required": true,
+          "in": "path",
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["Pharmacy"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get existing pharmacy",
+        "responses": {
+          "200": {
+            "description": "success get pharmacy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Pharmacy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Pharmacy"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Update existing pharmacy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdatePharmacy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update existing pharmacy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Pharmacy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Pharmacy"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Delete existing pharmacy",
+        "responses": {
+          "200": {
+            "description": "success delete pharmacy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/products": {
+      "get": {
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Get all products",
+        "responses": {
+          "200": {
+            "description": "success get all products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "paging": {
+                      "$ref": "#/components/schemas/PageMetaData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Create new product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update existing product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/products/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "put": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Update existing product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update existing product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Product"],
+        "security": [{ "jwtAuth": [] }],
+        "description": "Delete existing product",
+        "responses": {
+          "200": {
+            "description": "success delete existing product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/pharmacies/{pharmacyId}/products/export":{},
+    "/admin/pharmacies/orders":{},
+    "/pharmacists/pharmacies/{pharmacyId}":{},
+    "/pharmacists/pharmacies/{pharmacyId}/products":{},
+    "/pharmacists/pharmacies/{pharmacyId}/orders":{},
+    "/pharmacy/products": {},
+    "/pharmacy/products/{productId}": {},
+    "/pharmacy/orders": {},
+    "/pharmacy/orders/{orderId}": {}
+  },
+  "components": {
+    "securitySchemes": {
+      "jwtAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Partner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo_url": {
+            "type": "string"
+          },
+          "year_founded": {
+            "type": "string"
+          },
+          "active_days": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "start_operation": {
+            "type": "string"
+          },
+          "end_operation": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "Pharmacy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          },
+          "partner_id": {
+            "type": "number"
+          },
+          "pharmacist_id": {
+            "type": "number"
+          },
+          "logistic_partners": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "sub_district": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProductClassification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductForm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Logistic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Manufacture": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "manufacture": {
+            "$ref": "#/components/schemas/Manufacture"
+          },
+          "product_classification": {
+            "$ref": "#/components/schemas/ProductClassification"
+          },
+          "product_form": {
+            "$ref": "#/components/schemas/ProductForm"
+          },
+          "product_categories": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/ProductCategory"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "generic_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "unit_in_pack": {
+            "type": "string"
+          },
+          "selling_unit": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "length": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateOrUpdateProduct": {
+        "type": "object",
+        "properties": {
+          "manufacture_id": {
+            "type": "number"
+          },
+          "product_classification_id": {
+            "type": "number"
+          },
+          "product_form_id": {
+            "type": "number"
+          },
+          "product_categories": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "generic_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "unit_in_pack": {
+            "type": "string"
+          },
+          "selling_unit": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "length": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrUpdateAddress": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "sub_district": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrUpdatePharmacy": {
+        "type": "object",
+        "required": [
+          "name",
+          "address",
+          "city",
+          "latitude",
+          "longitude",
+          "partner_id",
+          "logistic_partners"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          },
+          "partner_id": {
+            "type": "number"
+          },
+          "pharmacist_id": {
+            "type": "number"
+          },
+          "logistic_partners": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateOrUpdatePartner": {
+        "type": "object",
+        "required": [
+          "name",
+          "logo",
+          "year_founded",
+          "active_days",
+          "start_operation",
+          "end_operation"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "year_founded": {
+            "type": "string"
+          },
+          "active_days": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "start_operation": {
+            "type": "string"
+          },
+          "end_operation": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLoginOrRegister": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "PageMetaData": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "total_item": {
+            "type": "integer"
+          },
+          "total_page": {
+            "type": "integer"
+          },
+          "link": {
+            "$ref": "#/components/schemas/PageLink"
+          }
+        }
+      },
+      "PageLink": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string"
+              },
+              "first": {
+                "type": "string"
+              },
+              "prev": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              },
+              "last": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "FieldError": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+drop table if exists manufactures cascade;
+drop table if exists product_classifications cascade;
+drop table if exists product_forms cascade;
+drop table if exists category_products cascade;
+drop table if exists products cascade;
+drop table if exists product_categories cascade;
+drop table if exists pharmacy_products cascade;
+drop index if exists idx_product_filter;
+drop index if exists idx_fk_product_manufacture_id;
+drop index if exists idx_fk_product_classification_id;
+drop index if exists idx_fk_product_form_id;
+drop index if exists idx_product_unique;
+drop index if exists idx_pharmacy_product_filter;
+drop index if exists idx_fk_pharmacy_product_pharmacy_id;
+drop index if exists idx_fk_pharmacy_product_product_id;
+drop index if exists idx_fk_product_category_product_id;
+drop index if exists idx_fk_product_category_category_id;

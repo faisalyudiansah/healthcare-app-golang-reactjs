@@ -1,0 +1,13 @@
+drop table if exists pharmacy_partners cascade;
+drop table if exists pharmacy_partner_changes cascade;
+drop table if exists logistics cascade;
+drop table if exists pharmacies cascade;
+drop table if exists pharmacy_logistics cascade;
+drop index if exists idx_fk_partner_change_partner_id; 
+drop index if exists idx_logistic_sla; 
+drop index if exists idx_pharmacy_location;
+drop index if exists idx_fk_pharmacy_pharmacist_id; 
+drop index if exists idx_fk_pharmacy_partner_id; 
+drop index if exists idx_pharmacy_partners_opt;
+drop index if exists idx_fk_pharmacy_logistic_pharmacy_id; 
+drop index if exists idx_fk_pharmacy_logistic_logistic_id; 
