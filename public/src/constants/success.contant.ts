@@ -1,0 +1,1 @@
+export const SUCCESS_MSG_RESPONSE_API = "success"
