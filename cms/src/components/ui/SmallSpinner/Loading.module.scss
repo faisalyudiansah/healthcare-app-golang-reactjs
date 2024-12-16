@@ -1,0 +1,14 @@
+.loading {
+  margin: 0 auto;
+
+  // border: 10px solid red;
+  @apply rounded-full size-8 border-[6px] border-primary2 border-r-[6px] border-r-[#e2e2db];
+
+  animation: 0.6s spin infinite forwards linear;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

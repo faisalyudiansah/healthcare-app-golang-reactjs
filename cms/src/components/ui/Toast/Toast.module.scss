@@ -1,0 +1,50 @@
+$transitionDur: 0.3s;
+
+.toast_initial {
+  @apply flex justify-center items-center gap-3 text-white font-medium;
+  opacity: 0;
+  padding: 12px 32px;
+
+  // width: 320px;
+
+  position: absolute;
+  top: 105px;
+  right: 0px;
+  z-index: 999;
+  width: 0;
+  height: 0;
+  @apply overflow-y-hidden;
+
+  border-radius: 8px;
+  box-shadow: 0 2px 2px 0px rgba($color: #000000, $alpha: 0.25);
+
+  transition: transform $transitionDur, opacity $transitionDur;
+}
+
+.toast_active {
+  opacity: 1;
+  width: 320px;
+  height: fit-content;
+  transform: translate(-41px, 0px) !important;
+}
+
+.toast_success_style {
+  @apply bg-green-500;
+}
+
+.toast_warning_style {
+  @apply bg-red-500;
+}
+
+@keyframes hehe {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
